@@ -1,1 +1,216 @@
 
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Admin - TrumBptrang Store</title>
+<style>
+*{box-sizing:border-box}
+body{
+ margin:0;background:#080d18;color:white;
+ font-family:Arial,sans-serif;padding:20px
+}
+.container{max-width:650px;margin:30px auto}
+h1{color:#42a5ff}
+.box{
+ background:#111d30;padding:22px;
+ border:1px solid #263d5c;border-radius:12px;
+ margin-bottom:20px
+}
+input,select,button{
+ width:100%;padding:14px;margin:8px 0;
+ border-radius:8px;border:1px solid #344967;
+ background:#19283d;color:white;font-size:15px
+}
+button{
+ background:#1685fa;border:0;font-weight:bold;
+ cursor:pointer
+}
+.danger{background:#bd3545}
+.item{
+ background:#1a2a40;padding:14px;
+ border-radius:8px;margin:12px 0
+}
+.small{color:#aabbd1;font-size:13px}
+.hidden{display:none}
+</style>
+</head>
+<body>
+<div class="container">
+<h1>TRUMBPtrang ADMIN</h1>
+<p class="small">Quản lý tài khoản FC Online Mobile</p>
+
+<div class="box" id="login">
+<h3>Đăng nhập quản trị</h3>
+<input id="adminPassword" type="password"
+placeholder="Mật khẩu Admin">
+<button onclick="login()">ĐĂNG NHẬP</button>
+<p id="loginMessage"></p>
+</div>
+
+<div id="dashboard" class="hidden">
+<div class="box">
+<h3>THÊM TÀI KHOẢN GAME</h3>
+
+<label>Danh mục</label>
+<select id="category">
+<option value="1">ACC BP 1B5 - 1B8 | 60K</option>
+<option value="2">ACC BP 2B - 2B3 | 70K</option>
+<option value="3">ACC BP 2B5 - 3B | 80K</option>
+</select>
+
+<input id="username" placeholder="Tài khoản game">
+<input id="password" type="password"
+placeholder="Mật khẩu game">
+
+<button onclick="addAccount()">ĐĂNG BÁN TÀI KHOẢN</button>
+<p id="message"></p>
+</div>
+
+<div class="box">
+<h3>DANH SÁCH TÀI KHOẢN</h3>
+<button onclick="loadAccounts()">LÀM MỚI DANH SÁCH</button>
+<div id="accounts"></div>
+</div>
+
+<button class="danger" onclick="logout()">ĐĂNG XUẤT</button>
+</div>
+</div>
+
+<script>
+const API = "https://trumbptrang-api.workers.dev";
+let token = "";
+
+async function login(){
+ const password =
+ document.getElementById("adminPassword").value;
+
+ try{
+  const response = await fetch(API+"/login",{
+   method:"POST",
+   headers:{"Content-Type":"application/json"},
+   body:JSON.stringify({password})
+  });
+
+  const data = await response.json();
+
+  if(!response.ok) throw new Error(data.error);
+
+  token = data.token;
+  document.getElementById("login").classList.add("hidden");
+  document.getElementById("dashboard").classList.remove("hidden");
+  loadAccounts();
+ }catch(error){
+  document.getElementById("loginMessage").textContent =
+   error.message || "Không kết nối được máy chủ";
+ }
+}
+
+async function addAccount(){
+ const category = document.getElementById("category").value;
+ const username = document.getElementById("username").value.trim();
+ const password = document.getElementById("password").value;
+
+ if(!username || !password){
+  alert("Vui lòng nhập đủ tài khoản và mật khẩu");
+  return;
+ }
+
+ try{
+  const response = await fetch(API+"/admin/accounts",{
+   method:"POST",
+   headers:{
+    "Content-Type":"application/json",
+    "Authorization":"Bearer "+token
+   },
+   body:JSON.stringify({category,username,password})
+  });
+
+  const data = await response.json();
+  if(!response.ok) throw new Error(data.error);
+
+  document.getElementById("username").value="";
+  document.getElementById("password").value="";
+  document.getElementById("message").textContent="Đã thêm tài khoản!";
+  loadAccounts();
+ }catch(error){
+  alert(error.message);
+ }
+}
+
+async function loadAccounts(){
+ try{
+  const response = await fetch(API+"/admin/accounts",{
+   headers:{"Authorization":"Bearer "+token}
+  });
+  if(!response.ok) throw new Error("Không tải được danh sách");
+
+  const data = await response.json();
+  const names={
+   "1":"ACC BP 1B5 - 1B8",
+   "2":"ACC BP 2B - 2B3",
+   "3":"ACC BP 2B5 - 3B"
+  };
+
+  document.getElementById("accounts").innerHTML =
+   data.map(a=>`
+    <div class="item">
+     <b>${names[a.category] || a.category}</b>
+     <p>Tài khoản: ${escapeHTML(a.username)}</p>
+     <p>Mật khẩu: ${escapeHTML(a.password)}</p>
+     <p>Trạng thái: ${a.status==="sold"?"Đã bán":"Còn hàng"}</p>
+     <button onclick="changeStatus(${a.id},'${a.status==="sold"?"available":"sold"}')">
+      ${a.status==="sold"?"MỞ BÁN LẠI":"ĐÁNH DẤU ĐÃ BÁN"}
+     </button>
+     <button class="danger" onclick="deleteAccount(${a.id})">XÓA</button>
+    </div>
+   `).join("") || "Chưa có tài khoản";
+ }catch(error){
+  document.getElementById("accounts").textContent=error.message;
+ }
+}
+
+function escapeHTML(value){
+ return String(value).replace(/[&<>"']/g,c=>({
+  "&":"&amp;","<":"&lt;",">":"&gt;",
+  '"':"&quot;","'":"&#39;"
+ }[c]));
+}
+
+async function changeStatus(id,status){
+ await fetch(API+"/admin/status",{
+  method:"POST",
+  headers:{
+   "Content-Type":"application/json",
+   "Authorization":"Bearer "+token
+  },
+  body:JSON.stringify({id,status})
+ });
+ loadAccounts();
+}
+
+async function deleteAccount(id){
+ if(!confirm("Bạn chắc chắn muốn xóa tài khoản này?"))return;
+
+ await fetch(API+"/admin/accounts",{
+  method:"DELETE",
+  headers:{
+   "Content-Type":"application/json",
+   "Authorization":"Bearer "+token
+  },
+  body:JSON.stringify({id})
+ });
+ loadAccounts();
+}
+
+function logout(){
+ token="";
+ document.getElementById("dashboard").classList.add("hidden");
+ document.getElementById("login").classList.remove("hidden");
+ document.getElementById("adminPassword").value="";
+}
+</script>
+</body>
+</html>
+
