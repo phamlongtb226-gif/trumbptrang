@@ -6,112 +6,197 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>TrumBptrang Store | FC Online Mobile</title>
 <style>
+:root{--bg:#080d18;--panel:#111d30;--panel2:#17263b;--line:#263d5c;--blue:#39a5ff;--muted:#aabbd1;--white:#fff}
 *{box-sizing:border-box;margin:0;padding:0}
-body{font-family:Arial,sans-serif;background:#080d18;color:#fff}
-header{padding:18px 6%;background:#101a2c;display:flex;justify-content:space-between;align-items:center;border-bottom:1px solid #263c5c}
-.logo{font-size:22px;font-weight:900;color:#39a5ff}
-.logo span{color:white}
-header a{color:white;text-decoration:none;font-size:13px}
-.hero{padding:65px 7%;background:linear-gradient(120deg,#102c50,#080d18)}
-.hero small{color:#48aaff;font-weight:bold;letter-spacing:3px}
-.hero h1{font-size:36px;margin:18px 0;line-height:1.2}
-.hero h1 span{color:#39a5ff}
-.hero p{color:#aabbd1;line-height:1.7}
-.btn{display:inline-block;margin-top:22px;padding:14px 24px;background:#1685fa;color:white;text-decoration:none;border-radius:8px;font-weight:bold}
-.container{max-width:1100px;margin:auto;padding:38px 18px}
-.heading{margin-bottom:25px}
-.heading h2{font-size:24px;margin-bottom:8px}
-.heading p{color:#91a4be;font-size:14px}
-.grid{display:grid;grid-template-columns:repeat(3,1fr);gap:18px}
-.card{background:#111d30;border:1px solid #263d5c;border-radius:13px;overflow:hidden}
-.card-top{height:135px;background:linear-gradient(135deg,#164e86,#101a2c);display:flex;align-items:center;justify-content:center;font-size:27px;font-weight:900;color:#62b6ff}
-.card-content{padding:20px}
-.card h3{font-size:19px;margin-bottom:15px}
-.detail{padding:11px;background:#1a2a40;border-radius:7px;margin:8px 0;color:#d5e2f2;font-size:14px}
-.price{font-size:27px;color:#4baaff;font-weight:900;margin:18px 0}
-.buy{display:block;text-align:center;background:#147ff0;color:white;padding:13px;text-decoration:none;border-radius:8px;font-weight:bold}
-.note{margin-top:25px;padding:17px;background:#101d31;border-radius:9px;color:#aabbd1;line-height:1.7;font-size:13px}
-footer{background:#101a2b;text-align:center;padding:35px 15px;color:#9bacbf}
-footer .logo{margin-bottom:12px}
-@media(max-width:750px){.grid{grid-template-columns:1fr}.hero h1{font-size:30px}}
+body{font-family:Arial,sans-serif;background:var(--bg);color:var(--white);line-height:1.5}
+button,input,select{font:inherit}button{cursor:pointer}
+.top{background:#060a12;color:#9eb4ce;text-align:center;padding:8px 12px;font-size:11px;letter-spacing:1.2px}
+header{position:sticky;top:0;z-index:5;background:#101a2c;border-bottom:1px solid var(--line)}
+.nav{max-width:1160px;margin:auto;padding:16px 20px;display:flex;align-items:center;justify-content:space-between;gap:16px}
+.logo{font-size:21px;font-weight:900;color:var(--blue);letter-spacing:.3px}.logo span{color:#fff}
+.navright{display:flex;align-items:center;gap:18px}
+.navright a{color:#e8f1fc;text-decoration:none;font-size:13px}
+.cartbtn,.primary{border:0;background:#1685fa;color:#fff;padding:11px 16px;border-radius:8px;font-weight:bold}
+.cartbtn b{background:#fff;color:#126dcc;border-radius:20px;padding:2px 7px;margin-left:5px}
+main{max-width:1160px;margin:auto;padding:28px 20px 60px}
+.hero{padding:54px 6%;border:1px solid #25476d;border-radius:18px;background:linear-gradient(120deg,#102c50,#080d18 80%);display:grid;grid-template-columns:1.2fr .8fr;align-items:center;gap:25px;overflow:hidden}
+.eyebrow{color:#48aaff;font-size:11px;font-weight:bold;letter-spacing:3px;text-transform:uppercase}
+h1{font-size:clamp(32px,5vw,54px);line-height:1.08;margin:15px 0;letter-spacing:-1.4px}
+.hero h1 span{color:var(--blue)}
+.hero p{color:var(--muted);max-width:550px;line-height:1.8}
+.hero .primary{margin-top:20px;padding:13px 20px}
+.heroart{height:205px;border:1px solid #345b82;border-radius:16px;background:radial-gradient(circle at 50% 45%,#39a5ff33,transparent 55%),linear-gradient(135deg,#164e86,#101a2c);display:grid;place-items:center;font-size:82px}
+.sectionhead{display:flex;justify-content:space-between;align-items:end;gap:15px;margin:38px 0 18px}
+.sectionhead h2{font-size:24px}.sectionhead p{color:#91a4be;font-size:13px;margin-top:4px}
+.filters{display:flex;gap:8px;flex-wrap:wrap}
+.filters button{background:#111d30;color:#c7d7e9;border:1px solid var(--line);border-radius:30px;padding:8px 13px;font-size:12px}
+.filters button.active{background:#1685fa;color:white;border-color:#1685fa}
+.toolbar{display:flex;gap:10px;margin-bottom:18px}
+.toolbar input,.toolbar select{border:1px solid var(--line);background:#101a2c;color:#fff;border-radius:9px;padding:12px}
+.toolbar input{flex:1;min-width:0}.toolbar input::placeholder{color:#8296af}
+.toolbar select{min-width:180px}
+.grid{display:grid;grid-template-columns:repeat(3,1fr);gap:17px}
+.product{background:var(--panel);border:1px solid var(--line);border-radius:13px;overflow:hidden;transition:.2s}
+.product:hover{transform:translateY(-3px);box-shadow:0 12px 28px #0005;border-color:#3979b7}
+.cover{height:140px;background:linear-gradient(135deg,#164e86,#101a2c);display:flex;align-items:center;justify-content:center;color:#62b6ff;position:relative}
+.cover .game{font-size:30px;font-weight:900;letter-spacing:1px}
+.cover small{position:absolute;left:13px;top:12px;background:#ffffff18;border:1px solid #ffffff30;color:#fff;padding:4px 8px;border-radius:20px;font-size:10px}
+.info{padding:17px}.info h3{font-size:18px;margin-bottom:12px}
+.detail{padding:9px 11px;background:#1a2a40;border-radius:7px;margin:7px 0;color:#d5e2f2;font-size:13px}
+.meta{display:flex;justify-content:space-between;align-items:center;gap:8px;margin:15px 0}
+.price{font-size:25px;color:#4baaff;font-weight:900}
+.stock{font-size:11px;color:#9db4ce}
+.info button{width:100%;border:1px solid #1685fa;background:#147ff0;color:white;padding:12px;border-radius:8px;font-weight:bold}
+.info button:hover{background:#086bd1}
+.notice{margin-top:24px;padding:16px;background:#101d31;border:1px solid var(--line);border-radius:10px;color:#aabbd1;font-size:12px;line-height:1.7}
+footer{background:#101a2b;border-top:1px solid var(--line);padding:30px 20px;color:#9bacbf}
+.foot{max-width:1160px;margin:auto;display:flex;justify-content:space-between;gap:20px;flex-wrap:wrap}
+.overlay{display:none;position:fixed;inset:0;background:#000a;z-index:10;justify-content:flex-end}
+.overlay.show{display:flex}
+.drawer{background:#101a2c;border-left:1px solid var(--line);width:min(450px,100%);height:100%;padding:22px;overflow:auto}
+.drawerhead{display:flex;justify-content:space-between;align-items:center;gap:12px;margin-bottom:15px}
+.drawerhead h2{font-size:20px}.x{border:0;background:#1a2a40;color:#fff;border-radius:8px;padding:8px 11px}
+.cartline{display:flex;justify-content:space-between;gap:12px;border-bottom:1px solid var(--line);padding:13px 0;font-size:13px}
+.cartline button{border:0;background:none;color:#ff9b9b;margin-top:5px}
+.total{display:flex;justify-content:space-between;font-weight:900;font-size:19px;margin:18px 0}
+.field{display:block;margin:12px 0}.field span{display:block;font-size:12px;font-weight:bold;margin-bottom:6px}
+.field input{width:100%;border:1px solid var(--line);border-radius:9px;padding:11px;background:#0b1422;color:white}
+.paybox{background:#17263b;border:1px solid var(--line);border-radius:10px;padding:13px;font-size:12px;color:#aabbd1;margin:14px 0}
+.paybox strong{color:#fff}.submit{width:100%;background:#1685fa;color:white;border:0;border-radius:9px;padding:13px;font-weight:800}
+.empty{color:#91a4be;text-align:center;padding:28px 0}
+#orderresult{font-size:12px;color:#9edb82;margin-top:12px;line-height:1.6}
+@media(max-width:760px){.hero{grid-template-columns:1fr;padding:34px 24px}.heroart{height:130px;font-size:58px}.grid{grid-template-columns:repeat(2,1fr)}.navright a{display:none}.sectionhead{align-items:start;flex-direction:column}}
+@media(max-width:520px){main{padding:18px 13px 42px}.nav{padding:13px}.grid{grid-template-columns:1fr}.cover{height:125px}.toolbar{flex-direction:column}.toolbar select{width:100%}.hero h1{font-size:32px}}
 </style>
 </head>
 <body>
-
-<header>
- <div class="logo">TRUMB<span>PTRANG</span></div>
- <a href="#accounts">DANH MỤC ACC</a>
-</header>
-
+<div class="top">TRUMBPtrang STORE · FC ONLINE MOBILE · CHỌN ACC PHÙ HỢP VỚI BẠN</div>
+<header><div class="nav">
+<div class="logo">TRUMB<span>PTRANG</span></div>
+<div class="navright"><a href="#products">Danh mục acc</a><a href="#policy">Lưu ý</a><button class="cartbtn" onclick="openCart()">Giỏ hàng <b id="cartcount">0</b></button></div>
+</div></header>
+<main>
 <section class="hero">
- <small>TRUMBPtrang STORE</small>
- <h1>CHỢ TÀI KHOẢN<br><span>FC ONLINE MOBILE</span></h1>
- <p>
-  Chuyên  FC Online Mobile.<br>
-  Lựa chọn tài khoản phù hợp với ngân sách của bạn.
- </p>
- <a href="#accounts" class="btn">KHÁM PHÁ NGAY →</a>
+<div><div class="eyebrow">TrumBptrang Store</div>
+<h1>CHỢ TÀI KHOẢN<br><span>FC ONLINE MOBILE</span></h1>
+<p>Chuyên tài khoản FC Online Mobile. Lựa chọn tài khoản phù hợp với ngân sách của bạn, xem giá rõ ràng và thêm sản phẩm vào giỏ hàng.</p>
+<a href="#products"><button class="primary">KHÁM PHÁ NGAY ↗</button></a>
+</div>
+<div class="heroart">⚽</div>
 </section>
 
-<main class="container" id="accounts">
- <div class="heading">
-  <h2>🔥 DANH MỤC TÀI KHOẢN</h2>
-  <p>Chọn danh mục tài khoản bạn muốn mua</p>
- </div>
-
- <div class="grid">
-
-  <div class="card">
-   <div class="card-top">FC ONLINE</div>
-   <div class="card-content">
-    <h3>ACC BP 1B5 - 1B8</h3>
-    <div class="detail">💰 BP: 1B5 - 1B8</div>
-    <div class="detail">⭐ STP: Đều dư 160K</div>
-    <div class="detail">🏆 HLV: 7 - 9</div>
-    <div class="price">60.000đ</div>
-    <a class="buy" href="#contact">MUA NGAY</a>
-   </div>
-  </div>
-
-  <div class="card">
-   <div class="card-top">FC ONLINE</div>
-   <div class="card-content">
-    <h3>ACC BP 2B - 2B3</h3>
-    <div class="detail">💰 BP: 2B - 2B3</div>
-    <div class="detail">⭐ STP: Đều dư 160K</div>
-    <div class="detail">🏆 HLV: 7 - 9</div>
-    <div class="price">70.000đ</div>
-    <a class="buy" href="#contact">MUA NGAY</a>
-   </div>
-  </div>
-
-  <div class="card">
-   <div class="card-top">FC ONLINE</div>
-   <div class="card-content">
-    <h3>ACC BP 2B5 - 3B</h3>
-    <div class="detail">💰 BP: 2B5 - 3B</div>
-    <div class="detail">⭐ STP: Đều dư 160K</div>
-    <div class="detail">🏆 HLV: 7 - 9</div>
-    <div class="price">80.000đ</div>
-    <a class="buy" href="#contact">MUA NGAY</a>
-   </div>
-  </div>
-
- </div>
-
- <div class="note">
-  <b>TRUMBPtrang STORE</b><br>
-  Website mua bán tài khoản FC Online Mobile.<br>
-  Thông tin liên hệ và phương thức mua hàng sẽ được cập nhật.
- </div>
+<div class="sectionhead" id="products">
+<div><h2>🔥 DANH MỤC TÀI KHOẢN</h2><p>Giữ nguyên 3 danh mục và giá hiện tại của shop</p></div>
+<div class="filters">
+<button class="active" onclick="filterCategory('Tất cả',this)">Tất cả</button>
+<button onclick="filterCategory('ACC BP 1B5 - 1B8',this)">BP 1B5–1B8</button>
+<button onclick="filterCategory('ACC BP 2B - 2B3',this)">BP 2B–2B3</button>
+<button onclick="filterCategory('ACC BP 2B5 - 3B',this)">BP 2B5–3B</button>
+</div>
+</div>
+<div class="toolbar">
+<input id="search" placeholder="Tìm danh mục tài khoản..." oninput="render()">
+<select id="sort" onchange="render()">
+<option value="default">Sắp xếp: Mặc định</option>
+<option value="low">Giá thấp đến cao</option>
+<option value="high">Giá cao đến thấp</option>
+</select>
+</div>
+<div class="grid" id="productsGrid"></div>
+<div class="notice" id="policy"><strong>Lưu ý:</strong> Giá và mô tả bên dưới được giữ theo giao diện cũ. Giỏ hàng hiện là bản xem thử trên trình duyệt, chưa gửi đơn về shop, chưa kết nối thanh toán hoặc tự động trừ số lượng trong kho.</div>
 </main>
+<footer><div class="foot">
+<div><div class="logo">TRUMB<span>PTRANG</span> STORE</div><small>Chuyên tài khoản FC Online Mobile</small></div>
+<small>© 2026 TrumBptrang Store</small>
+</div></footer>
 
-<footer id="contact">
- <div class="logo">TRUMBPtrang STORE</div>
- <p>Chuyên tài khoản FC Online Mobile</p>
- <p style="margin-top:12px">© 2026 TrumBptrang Store</p>
-</footer>
+<div class="overlay" id="overlay" onclick="if(event.target===this)closeCart()">
+<aside class="drawer">
+<div class="drawerhead"><h2>Giỏ hàng</h2><button class="x" onclick="closeCart()">Đóng ✕</button></div>
+<div id="cartitems"></div>
+<div class="total"><span>Tổng cộng</span><span id="total">0đ</span></div>
+<form onsubmit="placeOrder(event)">
+<label class="field"><span>Họ tên</span><input id="customer" required placeholder="Tên người mua"></label>
+<label class="field"><span>Số điện thoại / Zalo</span><input id="phone" required placeholder="Số liên hệ"></label>
+<label class="field"><span>Ghi chú</span><input id="note" placeholder="Yêu cầu thêm (không bắt buộc)"></label>
+<div class="paybox"><strong>Đặt hàng và thanh toán</strong><br>Đây mới là giao diện thử. Đơn hàng chưa được gửi đến quản trị viên và không phát sinh thanh toán thật.</div>
+<button class="submit" type="submit">Tạo đơn xem thử</button>
+</form>
+<p id="orderresult"></p>
+</aside>
+</div>
 
+<script>
+const products=[
+{id:1,name:'ACC BP 1B5 - 1B8',bp:'1B5 - 1B8',price:60000,tag:'Danh mục 01'},
+{id:2,name:'ACC BP 2B - 2B3',bp:'2B - 2B3',price:70000,tag:'Danh mục 02'},
+{id:3,name:'ACC BP 2B5 - 3B',bp:'2B5 - 3B',price:80000,tag:'Danh mục 03'}
+];
+let activeCategory='Tất cả',cart=[];
+const money=n=>n.toLocaleString('vi-VN')+'đ';
+
+function render(){
+const q=document.getElementById('search').value.trim().toLowerCase();
+const sort=document.getElementById('sort').value;
+let list=products.filter(p=>(activeCategory==='Tất cả'||p.name===activeCategory)&&p.name.toLowerCase().includes(q));
+if(sort==='low')list.sort((a,b)=>a.price-b.price);
+if(sort==='high')list.sort((a,b)=>b.price-a.price);
+document.getElementById('productsGrid').innerHTML=list.map(p=>`
+<article class="product">
+<div class="cover"><small>${p.tag}</small><div class="game">FC ONLINE</div></div>
+<div class="info"><h3>${p.name}</h3>
+<div class="detail">💰 BP: ${p.bp}</div>
+<div class="detail">⭐ STP: Đều dư 160K</div>
+<div class="detail">🏆 HLV: 7 - 9</div>
+<div class="meta"><span class="price">${money(p.price)}</span><span class="stock">● Giá niêm yết</span></div>
+<button onclick="addToCart(${p.id})">THÊM VÀO GIỎ +</button>
+</div>
+</article>`).join('')||'<div class="empty">Không tìm thấy danh mục phù hợp.</div>';
+}
+
+function filterCategory(name,button){
+activeCategory=name;
+document.querySelectorAll('.filters button').forEach(b=>b.classList.remove('active'));
+button.classList.add('active');
+render();
+}
+
+function addToCart(id){
+const p=products.find(x=>x.id===id),found=cart.find(x=>x.id===id);
+if(found)found.qty++;else cart.push({...p,qty:1});
+updateCart();openCart();
+}
+
+function removeFromCart(id){
+cart=cart.filter(x=>x.id!==id);updateCart();
+}
+
+function updateCart(){
+document.getElementById('cartcount').textContent=cart.reduce((n,x)=>n+x.qty,0);
+document.getElementById('cartitems').innerHTML=cart.length?cart.map(x=>`
+<div class="cartline"><div><strong>${x.name}</strong><br>${x.qty} × ${money(x.price)}</div>
+<div><strong>${money(x.qty*x.price)}</strong><br><button type="button" onclick="removeFromCart(${x.id})">Xóa</button></div></div>`).join(''):'<div class="empty">Giỏ hàng đang trống.</div>';
+document.getElementById('total').textContent=money(cart.reduce((n,x)=>n+x.price*x.qty,0));
+}
+
+function openCart(){
+document.getElementById('overlay').classList.add('show');updateCart();
+}
+function closeCart(){
+document.getElementById('overlay').classList.remove('show');
+}
+
+function placeOrder(e){
+e.preventDefault();
+if(!cart.length){
+document.getElementById('orderresult').textContent='Bạn chưa thêm tài khoản vào giỏ.';
+return;
+}
+document.getElementById('orderresult').textContent='Đã kiểm tra thông tin trên giao diện. Đây chưa phải đơn hàng thật; shop chưa nhận được thông báo. Vui lòng liên hệ shop để xác nhận mua.';
+}
+
+render();updateCart();
+</script>
 </body>
 </html>
 
